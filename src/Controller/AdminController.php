@@ -208,7 +208,7 @@ class AdminController extends \Pimcore\Bundle\AdminBundle\Controller\AdminContro
 
     protected function getCsvFile($fileHandle)
     {
-        return PIMCORE_SYSTEM_TEMP_DIRECTORY . '/' . $fileHandle . '.csv';
+        return $fileHandle . '.csv';
     }
 
     /**
@@ -239,7 +239,8 @@ class AdminController extends \Pimcore\Bundle\AdminBundle\Controller\AdminContro
         $jobs = array_chunk($ids, 20);
 
         $fileHandle = uniqid('export-');
-        file_put_contents($this->getCsvFile($fileHandle), '');
+        $storage = Tool\Storage::get('temp');
+        $storage->write($this->getCsvFile($fileHandle), '');
 
         return $this->adminJson(['success' => true, 'jobs' => $jobs, 'fileHandle' => $fileHandle]);
     }
